@@ -42,11 +42,35 @@ class MapViewController: UIViewController {
         case .denied, .restricted:
             //popup gosterecegiz. go to settings butonuna basildiginda
             //kullaniciyi uygulamamizin settings sayfasina gonder
+            showAlert()
             break
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         @unknown default:
             fatalError()
+        }
+    }
+    
+    private func showAlert() {
+        // create the alert
+        let alert = UIAlertController(title: "Title", message: "Message", preferredStyle: UIAlertController.Style.alert)
+        
+        // add the actions (buttons)
+        alert.addAction(UIAlertAction(title: "Go to settings", style: UIAlertAction.Style.default, handler: {[weak self] action in
+            self?.tappedGoToSettings()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+        
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func tappedGoToSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+            })
         }
     }
 
